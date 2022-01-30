@@ -3,7 +3,10 @@ import Dot from "./Dot";
 import MazeTexture from "./MazeTexture";
 
 export default class GameScene extends Phaser.Scene {
-  static readonly SIZE = 800;
+  static readonly RADIUS = 600;
+
+  public size: Phaser.Math.Vector2;
+  public center: Phaser.Math.Vector2;
 
   MazeTexture: MazeTexture;
 
@@ -17,13 +20,20 @@ export default class GameScene extends Phaser.Scene {
   LEVEL = 1;
 
   create() {
+    this.size = new Phaser.Math.Vector2(
+      this.renderer.width,
+      this.renderer.height
+    );
+    this.center = new Phaser.Math.Vector2(
+      this.renderer.width / 2,
+      this.renderer.height / 2
+    );
     /**
      * Remove Main camera and create two separate for each part
      */
     this.cameras.remove(this.cameras.main);
     this.yinCamera = new YinCamera(this);
     this.yangCamera = new YangCamera(this);
-
     /**
      * Create Maze Texture
      */

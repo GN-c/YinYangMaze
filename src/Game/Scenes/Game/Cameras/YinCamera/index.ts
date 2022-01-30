@@ -10,19 +10,13 @@ export default class YinCamera extends Camera {
   mazeImage: Phaser.GameObjects.Image;
   dot: Dot;
   constructor(scene: GameScene) {
-    super(
-      scene,
-      (1 / 4) * GameScene.SIZE,
-      0,
-      (3 / 4) * GameScene.SIZE,
-      GameScene.SIZE
-    );
+    super(scene, 0, 0, scene.size.x, scene.center.y + GameScene.RADIUS / 2);
     this.setBackgroundColor(0x000000);
   }
 
   create(): void {
     this.mazeImage = this.scene.add
-      .image(GameScene.SIZE / 2, GameScene.SIZE / 2, MazeTexture.TEXTURE_KEY)
+      .image(this.scene.center.x, this.scene.center.y, MazeTexture.TEXTURE_KEY)
       .setOrigin(0.5)
       .setTint(0xffffff);
 
@@ -41,7 +35,7 @@ export default class YinCamera extends Camera {
      */
     this.startFollow(this.dot, true, 1, 1, 0, 0);
 
-    this.setOrigin(1 / 3, 0.75);
+    this.setOrigin(0.5, 1 - GameScene.RADIUS / 4 / this.height);
   }
   reset(): void {
     this.dot.setCell(this.scene.MazeTexture.startingCell);
@@ -49,8 +43,8 @@ export default class YinCamera extends Camera {
 
   update(_time: number, _deltaTime: number): void {
     const angle = Phaser.Math.Angle.Between(
-      GameScene.SIZE / 2,
-      GameScene.SIZE / 2,
+      this.scene.center.x,
+      this.scene.center.y,
       this.dot.x,
       this.dot.y
     );
@@ -66,29 +60,34 @@ export default class YinCamera extends Camera {
         fillStyle: { color: 0x000000 },
       })
       .beginPath()
-      .arc(
-        GameScene.SIZE / 2,
-        GameScene.SIZE / 2,
-        GameScene.SIZE / 2,
-        -Math.PI / 2,
-        Math.PI / 2
+      .moveTo(0, 0)
+      .lineTo(this.scene.size.x, 0)
+      .lineTo(
+        this.scene.size.x,
+        this.scene.size.y - (this.scene.center.y - GameScene.RADIUS / 2)
+      )
+      .lineTo(
+        this.scene.center.x,
+        this.scene.size.y - (this.scene.center.y - GameScene.RADIUS / 2)
       )
       .arc(
-        GameScene.SIZE / 2,
-        (3 / 4) * GameScene.SIZE,
-        GameScene.SIZE / 4,
+        this.scene.center.x,
+        this.scene.center.y + (1 / 4) * GameScene.RADIUS,
+        GameScene.RADIUS / 4,
         Math.PI / 2,
         -Math.PI / 2
       )
       .arc(
-        GameScene.SIZE / 2,
-        (1 / 4) * GameScene.SIZE,
-        GameScene.SIZE / 4,
+        this.scene.center.x,
+        this.scene.center.y - (1 / 4) * GameScene.RADIUS,
+        GameScene.RADIUS / 4,
         Math.PI / 2,
         -Math.PI / 2,
         true
       )
-      .fillPath();
+      .lineTo(0, this.scene.center.y - GameScene.RADIUS / 2)
+      .fillPath()
+      .setPosition(0, 0);
     return this.setMask(
       new Phaser.Display.Masks.GeometryMask(this.scene, graphics),
       true

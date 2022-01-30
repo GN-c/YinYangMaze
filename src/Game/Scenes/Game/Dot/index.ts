@@ -165,8 +165,8 @@ export default class Dot extends Phaser.GameObjects.Arc {
   }
 
   setFromPolarCoordinates({ radius, angle }: PolarCoordinate) {
-    this.x = Math.cos(angle) * radius + GameScene.SIZE / 2;
-    this.y = Math.sin(angle) * radius + GameScene.SIZE / 2;
+    this.x = Math.cos(angle) * radius + this.scene.center.x;
+    this.y = Math.sin(angle) * radius + this.scene.center.y;
 
     return this;
   }
@@ -176,12 +176,12 @@ export default class Dot extends Phaser.GameObjects.Arc {
       radius: Phaser.Math.Distance.Between(
         this.x,
         this.y,
-        GameScene.SIZE / 2,
-        GameScene.SIZE / 2
+        this.scene.center.x,
+        this.scene.center.y
       ),
       angle: Phaser.Math.Angle.Between(
-        GameScene.SIZE / 2,
-        GameScene.SIZE / 2,
+        this.scene.center.x,
+        this.scene.center.y,
         this.x,
         this.y
       ),

@@ -9,8 +9,11 @@ export default class Game extends Phaser.Game {
       // backgroundColor: 0x43464b,
       canvas,
       transparent: true,
-      width: 800,
-      height: 800,
+      scale: {
+        mode: Phaser.Scale.ScaleModes.RESIZE,
+      },
+      width: window.innerWidth,
+      height: window.innerHeight,
       roundPixels: true,
       scene: GameScene,
     });
