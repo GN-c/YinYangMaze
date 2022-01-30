@@ -29,7 +29,7 @@ export default class GameScene extends Phaser.Scene {
      */
     this.MazeTexture = new MazeTexture(this, { lineWidth: 8 });
     /** generate maze texture */
-    this.MazeTexture.generate(Dot.RADIUS * 2.6, 4);
+    this.MazeTexture.generate(Dot.RADIUS * 2.6, 10);
     /**
      * Create Object for Each Camera
      */
