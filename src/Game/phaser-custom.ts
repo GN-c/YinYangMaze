@@ -18,56 +18,46 @@ var phaser = {
     UpdateList: require("gameobjects/UpdateList"),
 
     Image: require("gameobjects/image/Image"),
+    Arc: require("gameobjects/shape/arc/Arc"),
 
-    Sprite: require("gameobjects/sprite/Sprite"),
     BitmapText: require("gameobjects/bitmaptext/static/BitmapText"),
 
     Factories: {
       Image: require("gameobjects/image/ImageFactory"),
-      Sprite: require("gameobjects/sprite/SpriteFactory"),
       BitmapText: require("gameobjects/bitmaptext/static/BitmapTextFactory"),
+    },
+    Creators: {
+      Graphics: require("gameobjects/graphics/GraphicsCreator"),
     },
   },
 
   Sound: require("sound"),
-
-  Loader: {
-    FileTypes: {
-      AudioFile: require("loader/filetypes/AudioFile"),
-      ImageFile: require("loader/filetypes/ImageFile"),
-      SpriteSheetFile: require("loader/filetypes/SpriteSheetFile"),
-      BitmapFontFile: require("loader/filetypes/BitmapFontFile"),
-    },
-    LoaderPlugin: require("loader/LoaderPlugin"),
-  },
-
-  Physics: {
-    Arcade: {
-      Group: require("physics/arcade/PhysicsGroup"),
-      Sprite: require("physics/arcade/ArcadeSprite"),
-      ArcadePhysics: require("physics/arcade/ArcadePhysics"),
-    },
-  },
-
-  Input: {
-    Keyboard: require("input/keyboard"),
-    InputPlugin: require("input/InputPlugin"),
-    Events: require("input/events"),
-  },
-
-  Tweens: require("tweens"),
+  Input: require("input"),
 
   Display: {
     Masks: require("display/mask"),
   },
 
+  Utils: {
+    Array: require("utils/Array"),
+  },
+  Tweens: require("tweens"),
   Math: {
     Easing: {
       Bounce: require("math/easing/bounce"),
       Back: require("math/easing/back"),
     },
+    Snap: require("math/Snap"),
     Between: require("math/Between"),
+    Vector2: require("math/Vector2"),
+    Angle: {
+      Between: require("math/Angle/Between"),
+    },
+    Distance: {
+      Between: require("math/Distance/DistanceBetween"),
+    },
   },
+  Scale: require("scale"),
 } as unknown as typeof Phaser;
 //  Merge in the consts
 

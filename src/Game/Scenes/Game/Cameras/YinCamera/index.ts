@@ -10,7 +10,7 @@ export default class YinCamera extends Camera {
   mazeImage: Phaser.GameObjects.Image;
   dot: Dot;
   constructor(scene: GameScene) {
-    super(scene, 0, 0, scene.size.x, scene.center.y + GameScene.RADIUS / 2);
+    super(scene, 0, 0, scene.size.x, scene.center.y + GameScene.RADIUS * 2);
     this.setBackgroundColor(0x000000);
   }
 
@@ -35,7 +35,7 @@ export default class YinCamera extends Camera {
      */
     this.startFollow(this.dot, true, 1, 1, 0, 0);
 
-    this.setOrigin(0.5, 1 - GameScene.RADIUS / 4 / this.height);
+    this.setOrigin(0.5, 1 - GameScene.RADIUS / this.height);
   }
   reset(): void {
     this.dot.setCell(this.scene.MazeTexture.startingCell);
@@ -51,50 +51,76 @@ export default class YinCamera extends Camera {
     this.setRotation(-angle + Math.PI / 2);
   }
 
-  addMask() {
-    /**
-     * Create Graphics object for geometry mask
-     */
-    const graphics = this.scene.make
-      .graphics({
-        fillStyle: { color: 0x000000 },
-      })
+  updateGeometryMask(): this {
+    const verticalOffset = this.scene.center.y - GameScene.RADIUS * 2;
+
+    this.geometryMaskGraphics
+      .clear()
       .beginPath()
       .moveTo(0, 0)
-      .lineTo(this.scene.size.x, 0)
-      .lineTo(
-        this.scene.size.x,
-        this.scene.size.y - (this.scene.center.y - GameScene.RADIUS / 2)
+      .lineTo(this.scene.size.x, 0);
+
+    if (verticalOffset > 0)
+      this.geometryMaskGraphics.lineTo(this.scene.size.x, verticalOffset);
+
+    this.geometryMaskGraphics
+      .arc(
+        Math.max(
+          this.scene.center.x + GameScene.RADIUS,
+          this.scene.size.x - GameScene.RADIUS * 4
+        ),
+        verticalOffset,
+        GameScene.RADIUS * 4,
+        0,
+        Math.PI / 2
       )
+      .lineTo(this.scene.size.x, this.scene.center.y + 2 * GameScene.RADIUS)
       .lineTo(
         this.scene.center.x,
-        this.scene.size.y - (this.scene.center.y - GameScene.RADIUS / 2)
+        this.scene.size.y - (this.scene.center.y - GameScene.RADIUS * 2)
       )
       .arc(
         this.scene.center.x,
-        this.scene.center.y + (1 / 4) * GameScene.RADIUS,
-        GameScene.RADIUS / 4,
+        this.scene.center.y + GameScene.RADIUS,
+        GameScene.RADIUS,
         Math.PI / 2,
         -Math.PI / 2
       )
       .arc(
         this.scene.center.x,
-        this.scene.center.y - (1 / 4) * GameScene.RADIUS,
-        GameScene.RADIUS / 4,
+        this.scene.center.y - GameScene.RADIUS,
+        GameScene.RADIUS,
         Math.PI / 2,
         -Math.PI / 2,
         true
       )
-      .lineTo(0, this.scene.center.y - GameScene.RADIUS / 2)
+      .lineTo(
+        Math.min(this.scene.center.x - GameScene.RADIUS, GameScene.RADIUS * 4),
+        verticalOffset
+      )
+      .arc(
+        Math.min(this.scene.center.x - GameScene.RADIUS, GameScene.RADIUS * 4),
+        this.scene.center.y + 2 * GameScene.RADIUS,
+        GameScene.RADIUS * 4,
+        -Math.PI / 2,
+        Math.PI,
+        true
+      )
+      .lineTo(Math.min(0, this.scene.center.x - GameScene.RADIUS * 5), 0)
       .fillPath()
       .setPosition(0, 0);
-    return this.setMask(
-      new Phaser.Display.Masks.GeometryMask(this.scene, graphics),
-      true
-    );
+
+    return this;
   }
 
-  get specificGameObjects(): Phaser.GameObjects.GameObject[] {
-    return [this.mazeImage, this.dot];
+  handleResize(): void {
+    console.log("camera Resize");
+    super.handleResize();
+    this.setViewport(
+      0,
+      0,
+      this.scene.size.x,
+      this.scene.center.y + GameScene.RADIUS * 2
+    );
   }
 }

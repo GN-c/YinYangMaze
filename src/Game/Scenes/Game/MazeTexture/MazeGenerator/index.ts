@@ -55,7 +55,10 @@ export default class MazeGenerator {
     const nOfCells =
       index == 0
         ? 1
-        : Phaser.Math.Snap.Floor(Utils.TWO_PI * index, innerPolarRow.length);
+        : Phaser.Math.Snap.Floor(
+            Utils.TWO_PI / (2 * Math.asin(1 / (2 * index))),
+            innerPolarRow.length
+          );
 
     /**
      * Create row of cells

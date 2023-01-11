@@ -40,8 +40,8 @@ export default class MazeTexture {
      */
     this.texture = this.scene.textures.createCanvas(
       MazeTexture.TEXTURE_KEY,
-      100,
-      100
+      3,
+      3
     );
     this.ctx = this.texture.getContext();
 
@@ -56,7 +56,7 @@ export default class MazeTexture {
     this.complexity = complexity;
     this.size = 2 * this.complexity * this.pathWidth + this.style.lineWidth;
     this.offset = this.size / 2;
-
+    console.log(this.size);
     /**
      * Check if it's same size, we don't need to resize the texture
      */

@@ -193,6 +193,10 @@ export default class Dot extends Phaser.GameObjects.Arc {
     this.setFromPolarCoordinates(cell.centerPolarCoordinate);
   }
 
+  updatePosition() {
+    this.setFromPolarCoordinates(this.cell.centerPolarCoordinate);
+  }
+
   private addToScene() {
     this.scene.add.existing(this);
 

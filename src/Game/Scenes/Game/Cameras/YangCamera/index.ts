@@ -13,11 +13,11 @@ export default class YangCamera extends Camera {
     super(
       scene,
       0,
-      scene.center.y - GameScene.RADIUS / 2,
+      scene.center.y - GameScene.RADIUS * 2,
       scene.size.x,
-      scene.center.y + GameScene.RADIUS / 2
+      scene.center.y + GameScene.RADIUS * 2
     );
-    this.setBackgroundColor(0xffffff);
+    this.setBackgroundColor(0xffffff).clearMask();
   }
 
   create(): void {
@@ -41,7 +41,7 @@ export default class YangCamera extends Camera {
      */
     this.startFollow(this.dot, true, 1, 1, 0, 0);
 
-    this.setOrigin(0.5, GameScene.RADIUS / 4 / this.height);
+    this.setOrigin(0.5, GameScene.RADIUS / this.height);
   }
 
   reset(): void {
@@ -58,44 +58,68 @@ export default class YangCamera extends Camera {
     this.setRotation(-angle - Math.PI / 2);
   }
 
-  addMask() {
-    /**
-     * Create Graphics object for geometry mask
-     */
-    const graphics = this.scene.make
-      .graphics({
-        fillStyle: { color: 0x000000 },
-      })
+  updateGeometryMask(): this {
+    const verticalOffset = this.scene.center.y - GameScene.RADIUS * 2;
+    this.geometryMaskGraphics
+      .clear()
       .beginPath()
-      .moveTo(0, 0)
+      .moveTo(0, GameScene.RADIUS * 4)
+      .arc(
+        Math.min(GameScene.RADIUS * 4, this.scene.center.x - GameScene.RADIUS),
+        GameScene.RADIUS * 4,
+        GameScene.RADIUS * 4,
+        -Math.PI,
+        -Math.PI / 2
+      )
       .lineTo(this.scene.center.x, 0)
       .arc(
         this.scene.center.x,
-        GameScene.RADIUS / 4,
-        GameScene.RADIUS / 4,
+        GameScene.RADIUS,
+        GameScene.RADIUS,
         -Math.PI / 2,
         Math.PI / 2
       )
       .arc(
         this.scene.center.x,
-        (3 / 4) * GameScene.RADIUS,
-        GameScene.RADIUS / 4,
+        3 * GameScene.RADIUS,
+        GameScene.RADIUS,
         -Math.PI / 2,
         Math.PI / 2,
         true
       )
-      .lineTo(this.scene.size.x, GameScene.RADIUS)
-      .lineTo(this.scene.size.x, this.scene.center.y + GameScene.RADIUS / 2)
-      .lineTo(0, this.scene.center.y + GameScene.RADIUS / 2)
+      .lineTo(
+        Math.max(
+          this.scene.center.x + GameScene.RADIUS,
+          this.scene.size.x - GameScene.RADIUS * 5
+        ),
+        GameScene.RADIUS * 4
+      )
+      .arc(
+        Math.max(
+          this.scene.center.x + GameScene.RADIUS,
+          this.scene.size.x - GameScene.RADIUS * 4
+        ),
+        0,
+        GameScene.RADIUS * 4,
+        Math.PI / 2,
+        0,
+        true
+      )
+      .lineTo(this.scene.size.x, this.scene.size.y - verticalOffset)
+      .lineTo(0, this.scene.size.y - verticalOffset)
       .fillPath()
-      .setPosition(this.x, this.y);
-    return this.setMask(
-      new Phaser.Display.Masks.GeometryMask(this.scene, graphics),
-      true
-    );
+      .setPosition(0, this.scene.center.y - GameScene.RADIUS * 2);
+
+    return this;
   }
 
-  get specificGameObjects(): Phaser.GameObjects.GameObject[] {
-    return [this.mazeImage, this.dot];
+  handleResize(): void {
+    super.handleResize();
+    this.setViewport(
+      0,
+      this.scene.center.y - GameScene.RADIUS * 2,
+      this.scene.size.x,
+      this.scene.center.y + GameScene.RADIUS * 2
+    );
   }
 }
