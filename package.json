@@ -5,7 +5,7 @@
     "expose-loader": "^0.7.5",
     "html-webpack-plugin": "^4.0.0",
     "ts-loader": "^6.0.4",
-    "typescript": "latest",
+    "typescript": "4.6",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
